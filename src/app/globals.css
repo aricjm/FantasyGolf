@@ -24,3 +24,113 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* ==========================================
+   Light Mode Theme Overrides
+   ========================================== */
+html:not(.dark) {
+  --background: #f8fafc; /* Slate 50 */
+  --foreground: #0f172a; /* Slate 900 */
+}
+
+/* Invert background color for the layout container */
+html:not(.dark) .bg-neutral-950 {
+  background-color: #f1f5f9 !important; /* Slate 100 */
+}
+
+/* Invert text color to dark slate */
+html:not(.dark) .text-white {
+  color: #0f172a !important;
+}
+
+/* Card backgrounds - make them solid white with a subtle shadow and thin border */
+html:not(.dark) .bg-neutral-900\/40, 
+html:not(.dark) .bg-neutral-900\/60,
+html:not(.dark) .bg-neutral-950\/40,
+html:not(.dark) .bg-neutral-900 {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important; /* Slate 200 */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Borders */
+html:not(.dark) .border-neutral-800, 
+html:not(.dark) .border-neutral-850, 
+html:not(.dark) .border-neutral-900,
+html:not(.dark) .border-neutral-850\/60,
+html:not(.dark) .border-emerald-800\/30 {
+  border-color: #e2e8f0 !important;
+}
+
+/* Table headers */
+html:not(.dark) .bg-neutral-950\/60,
+html:not(.dark) thead.bg-neutral-950\/60 {
+  background-color: #f8fafc !important; /* Slate 50 */
+  border-color: #e2e8f0 !important;
+}
+
+/* Table body cell borders and text colors */
+html:not(.dark) td {
+  border-color: #f1f5f9 !important;
+}
+
+html:not(.dark) .text-neutral-300, 
+html:not(.dark) .text-neutral-350,
+html:not(.dark) .text-neutral-400,
+html:not(.dark) .text-neutral-450,
+html:not(.dark) .text-neutral-500 {
+  color: #475569 !important; /* Slate 600 */
+}
+
+/* Dropdowns and select boxes */
+html:not(.dark) select, 
+html:not(.dark) input {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important; /* Slate 300 */
+  color: #0f172a !important;
+}
+
+html:not(.dark) select:focus, 
+html:not(.dark) input:focus {
+  border-color: #10b981 !important; /* Emerald 500 */
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15) !important;
+}
+
+/* Navbar styling in light mode */
+html:not(.dark) nav.bg-neutral-950\/80 {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Hover background and texts */
+html:not(.dark) .hover\:bg-neutral-800\/60:hover,
+html:not(.dark) .hover\:bg-neutral-800:hover,
+html:not(.dark) .hover\:bg-neutral-850\/10:hover {
+  background-color: #f1f5f9 !important; /* Slate 100 */
+}
+
+html:not(.dark) .hover\:text-white:hover {
+  color: #0f172a !important;
+}
+
+/* Soft Ambient Blur background - make it lighter and more pastel */
+html:not(.dark) .bg-emerald-500\/5 {
+  background-color: rgba(16, 185, 129, 0.03) !important;
+}
+
+html:not(.dark) .bg-amber-500\/5 {
+  background-color: rgba(245, 158, 11, 0.03) !important;
+}
+
+/* Link styling class active/inactive states */
+html:not(.dark) .bg-emerald-800\/40 {
+  background-color: rgba(16, 185, 129, 0.15) !important;
+  color: #047857 !important; /* Emerald 700 */
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+/* Profile and settings dropdowns */
+html:not(.dark) .bg-neutral-900 {
+  background-color: #ffffff !important;
+}

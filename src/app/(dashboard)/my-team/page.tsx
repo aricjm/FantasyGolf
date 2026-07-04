@@ -124,7 +124,7 @@ export default async function MyTeamPage() {
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
       
       {/* 1. Header Section */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-neutral-900/40 border border-neutral-800 p-6 rounded-2xl backdrop-blur-xl">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-neutral-900/40 border border-neutral-800 p-6 rounded-2xl backdrop-blur-xl relative z-10">
         <div className="flex items-center gap-4">
           {user.logoUrl ? (
             <img

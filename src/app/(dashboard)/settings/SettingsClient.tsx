@@ -5,11 +5,18 @@ import React, { useState, useEffect } from 'react';
 export default function SettingsClient() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
-  // Simple theme toggle simulation
+  // Load the initial theme on component mount
+  useEffect(() => {
+    const isLight = !document.documentElement.classList.contains('dark');
+    setTheme(isLight ? 'light' : 'dark');
+  }, []);
+
+  // Theme toggle with localStorage persistence
   const toggleTheme = () => {
     const next = theme === 'dark' ? 'light' : 'dark';
     setTheme(next);
-    // In a full implementation, we would set documentElement class for Tailwind dark mode
+    localStorage.setItem('theme', next);
+    
     if (next === 'light') {
       document.documentElement.classList.remove('dark');
     } else {
