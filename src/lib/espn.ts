@@ -198,3 +198,51 @@ export async function fetchLiveScoreboard(eventId?: string): Promise<TournamentS
     return null;
   }
 }
+
+function normalizeString(str: string) {
+  return str.toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function getOrdinal(n: number) {
+  const s = ["th", "st", "nd", "rd"];
+  const v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+/**
+ * Fetches the historical results for a specific tournament name and year.
+ * Returns a map of athleteId -> result string (e.g. "1st", "12th", "CUT").
+ */
+export async function getHistoricalTournamentResults(tournamentName: string, year: number): Promise<Record<number, string>> {
+  try {
+    const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard?dates=${year}`, { cache: 'no-store' });
+    if (!res.ok) return {};
+    const data = await res.json();
+    
+    const normSearch = normalizeString(tournamentName);
+    const event = data.events?.find((e: any) => {
+      const normEvt = normalizeString(e.name);
+      return normEvt.includes(normSearch) || normSearch.includes(normEvt);
+    });
+
+    if (!event) return {};
+
+    // Fetch that specific event
+    const scoreboard = await fetchLiveScoreboard(event.id);
+    if (!scoreboard || !scoreboard.golfers) return {};
+
+    const results: Record<number, string> = {};
+    scoreboard.golfers.forEach(g => {
+      if (!g.madeCut) {
+        results[g.athleteId] = 'CUT';
+      } else {
+        results[g.athleteId] = g.rank > 0 ? getOrdinal(g.rank) : 'CUT';
+      }
+    });
+
+    return results;
+  } catch (err) {
+    console.error(`Failed to fetch historical results for ${tournamentName} ${year}:`, err);
+    return {};
+  }
+}

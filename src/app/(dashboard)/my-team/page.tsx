@@ -122,7 +122,7 @@ export default async function MyTeamPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      
+
       {/* 1. Header Section */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-neutral-900/40 border border-neutral-800 p-6 rounded-2xl backdrop-blur-xl relative z-10">
         <div className="flex items-center gap-4">
@@ -165,15 +165,13 @@ export default async function MyTeamPage() {
       )}
 
       {/* 3. Tournament Banner */}
-      <div className={`p-6 rounded-2xl border ${
-        isLocked
-          ? 'bg-red-950/20 border-red-900/30 text-red-100'
-          : 'bg-emerald-950/10 border-emerald-900/20 text-emerald-100'
-      } flex flex-col md:flex-row items-start md:items-center justify-between gap-4`}>
+      <div className={`p-6 rounded-2xl border ${isLocked
+        ? 'bg-red-950/20 border-red-900/30 text-red-100'
+        : 'bg-emerald-950/10 border-emerald-900/20 text-emerald-100'
+        } flex flex-col md:flex-row items-start md:items-center justify-between gap-4`}>
         <div>
-          <span className={`text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded ${
-            isLocked ? 'bg-red-900/40 text-red-300' : 'bg-emerald-900/40 text-emerald-400'
-          }`}>
+          <span className={`text-[10px] font-black tracking-widest uppercase px-2 py-0.5 rounded ${isLocked ? 'bg-red-900/40 text-red-300' : 'bg-emerald-900/40 text-emerald-400'
+            }`}>
             {isLocked ? 'Lineup Locked' : 'Lineup Open'}
           </span>
           <h2 className="text-lg font-bold text-white mt-2">{tournament.name}</h2>
@@ -197,7 +195,7 @@ export default async function MyTeamPage() {
 
       {/* 4. Roster Section */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-        
+
         {/* Roster & Lineup Manager (Col span 2) */}
         <div className="xl:col-span-2 space-y-6">
           <div className="flex items-center justify-between">
@@ -233,24 +231,29 @@ export default async function MyTeamPage() {
         {/* Scoring & Rules summary */}
         <div className="space-y-6">
           <h2 className="text-xl font-bold text-white tracking-tight">Active Scoring Rules</h2>
-          <div className="bg-neutral-900/40 border border-neutral-800 rounded-2xl p-6 backdrop-blur-xl space-y-4">
-            <div className="border-b border-neutral-800 pb-3">
-              <h3 className="text-xs font-black tracking-widest text-emerald-400 uppercase">Hole scores</h3>
-              <div className="grid grid-cols-2 gap-y-2 mt-2.5 text-sm text-neutral-300">
-                <div className="flex justify-between pr-4"><span>Albatross</span> <span className="font-bold text-white">+20</span></div>
+          <div className="bg-neutral-900/40 border border-neutral-800 rounded-2xl p-6 backdrop-blur-xl space-y-5">
+
+            {/* Hole Scores */}
+            <div className="border-b border-neutral-800 pb-4">
+              <h3 className="text-xs font-black tracking-widest text-emerald-400 uppercase mb-2.5">Tournament Points — Hole Scores</h3>
+              <p className="text-[10px] text-neutral-500 mb-3">Points earned per hole by each of your rostered golfers.</p>
+              <div className="grid grid-cols-2 gap-y-2 text-sm text-neutral-300">
+                <div className="flex justify-between pr-4"><span>Albatross</span> <span className="font-bold text-emerald-400">+20</span></div>
                 <div className="flex justify-between"><span>Bogey</span> <span className="font-bold text-red-400">-4</span></div>
-                <div className="flex justify-between pr-4"><span>Hole in One</span> <span className="font-bold text-white">+12</span></div>
+                <div className="flex justify-between pr-4"><span>Hole in One</span> <span className="font-bold text-emerald-400">+12</span></div>
                 <div className="flex justify-between"><span>Double Bogey</span> <span className="font-bold text-red-500">-8</span></div>
-                <div className="flex justify-between pr-4"><span>Eagle</span> <span className="font-bold text-white">+8</span></div>
+                <div className="flex justify-between pr-4"><span>Eagle</span> <span className="font-bold text-emerald-400">+8</span></div>
                 <div className="flex justify-between"><span>Triple+ Bogey</span> <span className="font-bold text-red-600">-12</span></div>
                 <div className="flex justify-between pr-4"><span>Birdie</span> <span className="font-bold text-emerald-400">+4</span></div>
-                <div className="flex justify-between"><span>Par</span> <span className="font-bold text-white">+1</span></div>
+                <div className="flex justify-between"><span>Par</span> <span className="font-bold text-emerald-400">+1</span></div>
               </div>
             </div>
 
-            <div>
-              <h3 className="text-xs font-black tracking-widest text-emerald-400 uppercase">Finish placement points</h3>
-              <div className="grid grid-cols-2 gap-y-2 mt-2.5 text-sm text-neutral-300">
+            {/* Golfer Finish Placement */}
+            <div className="border-b border-neutral-800 pb-4">
+              <h3 className="text-xs font-black tracking-widest text-emerald-400 uppercase mb-2.5">Tournament Points — Golfer Finish</h3>
+              <p className="text-[10px] text-neutral-500 mb-3">Bonus points added to your Tournament Score based on each golfer's finishing position.</p>
+              <div className="grid grid-cols-2 gap-y-2 text-sm text-neutral-300">
                 <div className="flex justify-between pr-4"><span>1st Place</span> <span className="font-bold text-white">+30</span></div>
                 <div className="flex justify-between"><span>6th Place</span> <span className="font-bold text-white">+20</span></div>
                 <div className="flex justify-between pr-4"><span>2nd Place</span> <span className="font-bold text-white">+28</span></div>
@@ -270,6 +273,25 @@ export default async function MyTeamPage() {
                 <p className="mt-1">• 30th+ & made cut: 2 pts</p>
               </div>
             </div>
+
+            {/* Season Points */}
+            <div>
+              <h3 className="text-xs font-black tracking-widest text-amber-400 uppercase mb-2.5">Season Points — Team vs. Team</h3>
+              <p className="text-[10px] text-neutral-500 mb-3">After each tournament, teams rank against each other by Tournament Score. Your place earns Season Points — the most at year's end wins the league.</p>
+              <div className="grid grid-cols-2 gap-y-2 text-sm text-neutral-300">
+                <div className="flex justify-between pr-4"><span>1st Place</span> <span className="font-bold text-amber-400">+20</span></div>
+                <div className="flex justify-between"><span>6th Place</span> <span className="font-bold text-emerald-400">+8</span></div>
+                <div className="flex justify-between pr-4"><span>2nd Place</span> <span className="font-bold text-emerald-400">+17</span></div>
+                <div className="flex justify-between"><span>7th Place</span> <span className="font-bold text-emerald-400">+6</span></div>
+                <div className="flex justify-between pr-4"><span>3rd Place</span> <span className="font-bold text-emerald-400">+14</span></div>
+                <div className="flex justify-between"><span>8th Place</span> <span className="font-bold text-emerald-400">+4</span></div>
+                <div className="flex justify-between pr-4"><span>4th Place</span> <span className="font-bold text-emerald-400">+12</span></div>
+                <div className="flex justify-between"><span>9th Place</span> <span className="font-bold text-emerald-400">+2</span></div>
+                <div className="flex justify-between pr-4"><span>5th Place</span> <span className="font-bold text-emerald-400">+10</span></div>
+                <div className="flex justify-between"><span>10th Place</span> <span className="font-bold text-red-400">0</span></div>
+              </div>
+            </div>
+
           </div>
         </div>
 

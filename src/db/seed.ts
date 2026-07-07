@@ -35,12 +35,14 @@ const golfersToSeed = [
   { id: 19, name: 'Robert MacIntyre', rank: 19, country: 'Scotland', type: 'top20' },
   { id: 20, name: 'Si Woo Kim', rank: 20, country: 'South Korea', type: 'top20' },
 
-  // #21-#125 World Rank Golfers in PGA
-  { id: 21, name: 'Sepp Straka', rank: 21, country: 'Austria', type: 'field' },
-  { id: 22, name: 'Alex Noren', rank: 22, country: 'Sweden', type: 'field' },
-  { id: 23, name: 'Akshay Bhatia', rank: 23, country: 'USA', type: 'field' },
-  { id: 24, name: 'Jacob Bridgeman', rank: 24, country: 'USA', type: 'field' },
-  { id: 25, name: 'Ryan Gerard', rank: 25, country: 'USA', type: 'field' },
+  // #21-#25 Weekly Short Draft Golfers (also available in weekly short drafts due to injury/schedule risk)
+  { id: 21, name: 'Sepp Straka', rank: 21, country: 'Austria', type: 'top20' },
+  { id: 22, name: 'Alex Noren', rank: 22, country: 'Sweden', type: 'top20' },
+  { id: 23, name: 'Akshay Bhatia', rank: 23, country: 'USA', type: 'top20' },
+  { id: 24, name: 'Jacob Bridgeman', rank: 24, country: 'USA', type: 'top20' },
+  { id: 25, name: 'Ryan Gerard', rank: 25, country: 'USA', type: 'top20' },
+
+  // #26-#125 Season Roster Draft Golfers (long season draft)
   { id: 26, name: 'Harris English', rank: 26, country: 'USA', type: 'field' },
   { id: 27, name: 'Hideki Matsuyama', rank: 27, country: 'Japan', type: 'field' },
   { id: 28, name: 'J.T. Poston', rank: 28, country: 'USA', type: 'field' },
@@ -156,22 +158,22 @@ const tournamentsToSeed = [
 
   // 20 Regular Tournaments 2027
   { id: 'sentry-2027', name: 'The Sentry', type: 'regular', startDate: new Date('2027-01-28T08:00:00Z'), status: 'pending' },
-  { id: 'farmers-2027', name: 'Farmers Insurance Open (Torrey Pines)', type: 'regular', startDate: new Date('2027-01-28T08:00:00Z'), status: 'pending' },
+  { id: 'cj-cup-2027', name: 'The CJ CUP Byron Nelson', type: 'regular', startDate: new Date('2027-05-20T08:00:00Z'), status: 'pending' },
   { id: 'pebble-beach-2027', name: 'AT&T Pebble Beach Pro-Am', type: 'regular', startDate: new Date('2027-02-04T08:00:00Z'), status: 'pending' },
   { id: 'phoenix-open-2027', name: 'WM Phoenix Open', type: 'regular', startDate: new Date('2027-02-11T08:00:00Z'), status: 'pending' },
   { id: 'genesis-inv-2027', name: 'The Genesis Invitational', type: 'regular', startDate: new Date('2027-02-18T08:00:00Z'), status: 'pending' },
-  { id: 'cadillac-2027', name: 'Cadillac Championship', type: 'regular', startDate: new Date('2027-03-04T08:00:00Z'), status: 'pending' },
+  { id: 'houston-open-2027', name: 'Texas Childrens Houston Open', type: 'regular', startDate: new Date('2027-03-25T08:00:00Z'), status: 'pending' },
   { id: 'players-2027', name: 'The Players Championship', type: 'regular', startDate: new Date('2027-03-11T08:00:00Z'), status: 'pending' },
   { id: 'palmer-inv-2027', name: 'Arnold Palmer Invitational', type: 'regular', startDate: new Date('2027-03-18T08:00:00Z'), status: 'pending' },
   { id: 'texas-open-2027', name: 'Valero Texas Open', type: 'regular', startDate: new Date('2027-04-01T08:00:00Z'), status: 'pending' },
   { id: 'rbc-heritage-2027', name: 'RBC Heritage', type: 'regular', startDate: new Date('2027-04-15T08:00:00Z'), status: 'pending' },
-  { id: 'valspar-2027', name: 'Valspar Championship', type: 'regular', startDate: new Date('2027-05-06T08:00:00Z'), status: 'pending' },
+  { id: 'schwab-2027', name: 'Charles Schwab Challenge', type: 'regular', startDate: new Date('2027-05-27T08:00:00Z'), status: 'pending' },
   { id: 'truist-2027', name: 'Truist Championship', type: 'regular', startDate: new Date('2027-05-13T08:00:00Z'), status: 'pending' },
   { id: 'memorial-2027', name: 'Memorial Tournament', type: 'regular', startDate: new Date('2027-06-03T08:00:00Z'), status: 'pending' },
   { id: 'travelers-2027', name: 'Travelers Championship', type: 'regular', startDate: new Date('2027-06-24T08:00:00Z'), status: 'pending' },
-  { id: 'john-deere-2027', name: 'John Deere Classic', type: 'regular', startDate: new Date('2027-07-01T08:00:00Z'), status: 'pending' },
+  { id: 'rbc-canadian-2027', name: 'RBC Canadian Championship', type: 'regular', startDate: new Date('2027-06-10T08:00:00Z'), status: 'pending' },
   { id: 'scottish-open-2027', name: 'Genesis Scottish Open', type: 'regular', startDate: new Date('2027-07-08T08:00:00Z'), status: 'pending' },
-  { id: 'rocket-classic-2027', name: 'Rocket Classic', type: 'regular', startDate: new Date('2027-07-29T08:00:00Z'), status: 'pending' },
+  { id: 'hero-world-2027', name: 'Hero World Challenge', type: 'regular', startDate: new Date('2027-11-25T08:00:00Z'), status: 'pending' },
   { id: 'st-jude-2027', name: 'FedEx St. Jude Championship', type: 'regular', startDate: new Date('2027-08-12T08:00:00Z'), status: 'pending' },
   { id: 'bmw-2027', name: 'BMW Championship', type: 'regular', startDate: new Date('2027-08-19T08:00:00Z'), status: 'pending' },
   { id: 'tour-champ-2027', name: 'Tour Championship', type: 'regular', startDate: new Date('2027-08-26T08:00:00Z'), status: 'pending' }

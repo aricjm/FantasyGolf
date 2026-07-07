@@ -34,9 +34,9 @@ export async function claimFreeAgent(golferToAddId: number, golferToDropId: numb
 
   // Roster size limit is 10.
   // Note: Roster size = 8 permanent + 2 weekly top-20 short draft golfers.
-  // In Free Agency, users can only add/drop permanent field golfers (#21-#125). They cannot pick up top-20 golfers as free agents (top-20 golfers are exclusively drafted in weekly short drafts).
+  // In Free Agency, users can only add/drop permanent field golfers (#26-#125). They cannot pick up top-20 golfers as free agents (top-20 golfers are exclusively drafted in weekly short drafts).
   if (golferToAdd.type === 'top20') {
-    return { error: 'Top 20 golfers cannot be claimed in Free Agency. They must be drafted in weekly short drafts.' };
+    return { error: 'Ranks 1–25 golfers cannot be claimed in Free Agency. They must be drafted in weekly short drafts.' };
   }
 
   // Check if we need to drop
@@ -57,11 +57,9 @@ export async function claimFreeAgent(golferToAddId: number, golferToDropId: numb
       .where(eq(golfers.id, golferToDropId))
       .limit(1);
 
-    if (golferToDrop) {
-      // You can never drop a top 20 golfer
-      if (golferToDrop.type === 'top20' || golferToDrop.rank <= 20) {
-        return { error: 'Invalid Drop: You can never drop a top 20 world-ranked golfer for a free agent.' };
-      }
+    // You can never drop a rank 1-25 golfer (weekly short draft tier)
+    if (golferToDrop.type === 'top20' || golferToDrop.rank <= 25) {
+      return { error: 'Invalid Drop: You cannot drop a top 25 world-ranked golfer as a free agent.' };
     }
 
     // Execute drop

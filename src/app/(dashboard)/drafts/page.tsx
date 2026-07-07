@@ -97,7 +97,7 @@ export default async function DraftsListPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      
+
       {/* Page Header */}
       <div>
         <h1 className="text-3xl font-black text-white tracking-tight">Draft Rooms</h1>
@@ -107,11 +107,11 @@ export default async function DraftsListPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
+
         {/* Preseason Long Draft Room Card */}
         <div className="md:col-span-1">
           <h2 className="text-lg font-bold text-white mb-4">Preseason Long Draft</h2>
-          
+
           {longDraft ? (
             <div className="bg-gradient-to-br from-emerald-950/20 to-neutral-900 border border-emerald-900/30 rounded-2xl p-6 relative overflow-hidden shadow-xl backdrop-blur-xl">
               <div className="absolute top-0 right-0 bg-emerald-600/20 text-emerald-400 px-3 py-1 text-[10px] font-black uppercase tracking-wider rounded-bl-xl border-l border-b border-emerald-900/30">
@@ -119,18 +119,17 @@ export default async function DraftsListPage() {
               </div>
               <h3 className="text-xl font-bold text-white">Season Roster Draft</h3>
               <p className="text-xs text-emerald-500 font-semibold mt-1">
-                8 Rounds • Selects world rank #21 to #125
+                8 Rounds • Selects world rank #26 to #125
               </p>
-              
+
               <div className="mt-6 space-y-2 text-sm text-neutral-300">
                 <div className="flex justify-between border-b border-neutral-800 pb-2">
                   <span>Status</span>
-                  <span className={`font-bold capitalize ${
-                    longDraft.status === 'completed' ? 'text-neutral-500' :
+                  <span className={`font-bold capitalize ${longDraft.status === 'completed' ? 'text-neutral-500' :
                     longDraft.status === 'active' ? 'text-emerald-400 animate-pulse' : 'text-amber-500'
-                  }`}>
+                    }`}>
                     {longDraft.status === 'completed' ? 'Finished' :
-                     longDraft.status === 'active' ? 'Drafting Live' : 'Not Started'}
+                      longDraft.status === 'active' ? 'Drafting Live' : 'Not Started'}
                   </span>
                 </div>
                 <div className="flex justify-between border-b border-neutral-800 pb-2">
@@ -170,7 +169,7 @@ export default async function DraftsListPage() {
                   <h3 className="font-bold text-white text-sm">{d.tournamentName}</h3>
                   <div className="flex items-center gap-2 mt-1 text-[10px] text-neutral-400 font-medium">
                     <span className="text-amber-500 font-bold uppercase tracking-wider">
-                      ⚡ 2 Rounds (Top 20)
+                      ⚡ 2 Rounds (Top 25)
                     </span>
                     <span>•</span>
                     <span>
@@ -182,21 +181,19 @@ export default async function DraftsListPage() {
                 <div className="flex items-center justify-between sm:justify-end gap-6">
                   <div className="text-right sm:text-right">
                     <span className="text-[10px] text-neutral-500 block">Status</span>
-                    <span className={`text-xs font-bold capitalize ${
-                      d.status === 'completed' ? 'text-neutral-500' :
+                    <span className={`text-xs font-bold capitalize ${d.status === 'completed' ? 'text-neutral-500' :
                       d.status === 'active' ? 'text-emerald-400 font-black' : 'text-amber-500'
-                    }`}>
+                      }`}>
                       {d.status === 'completed' ? 'Finished' :
-                       d.status === 'active' ? 'Active' : 'Pending'}
+                        d.status === 'active' ? 'Active' : 'Pending'}
                     </span>
                   </div>
                   <Link
                     href={`/drafts/${d.id}`}
-                    className={`px-4 py-2 text-xs font-bold rounded-lg transition active:scale-95 ${
-                      d.status === 'completed'
-                        ? 'bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700'
-                        : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-900/20'
-                    }`}
+                    className={`px-4 py-2 text-xs font-bold rounded-lg transition active:scale-95 ${d.status === 'completed'
+                      ? 'bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700'
+                      : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-900/20'
+                      }`}
                   >
                     Draft
                   </Link>

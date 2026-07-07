@@ -31,7 +31,7 @@ export default async function FreeAgentsPage() {
   const allRosteredRecords = await db.select({ golferId: rosters.golferId }).from(rosters);
   const rosteredGolferIds = allRosteredRecords.map((r) => r.golferId);
 
-  // 3. Fetch all field golfers (PGA field golfers #21-#125 are eligible for free agency)
+  // 3. Fetch all field golfers (PGA field golfers #26-#125 are eligible for free agency)
   const fieldGolfers = await db
     .select()
     .from(golfers)
@@ -46,24 +46,24 @@ export default async function FreeAgentsPage() {
     .filter((g) => !rosteredGolferIds.includes(g.id))
     .map((golfer) => {
       const golferScores = allScores.filter((s) => s.golferId === golfer.id);
-      
+
       // Age: deterministic mock (realistic range 22-38)
       const age = (golfer.id % 17) + 22;
-      
+
       let events = golferScores.length;
       let totPts = golferScores.reduce((sum, s) => sum + s.totalPoints, 0);
-      
+
       // Fallback/mock values if no scores exist in the database yet
       if (events === 0) {
         events = (golfer.id % 5) + 4; // 4 to 8 events
         const basePoints = Math.max(15, Math.round((140 - golfer.rank) * 1.8));
         totPts = basePoints + (golfer.id % 15);
       }
-      
+
       const avgPts = parseFloat((totPts / events).toFixed(1));
       const ptsLost = Math.round(events * 9 + (golfer.id % 7) * 1.5);
       const ptsGain = totPts + ptsLost;
-      
+
       return {
         ...golfer,
         age,
@@ -77,7 +77,7 @@ export default async function FreeAgentsPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      
+
       {/* Header */}
       <div>
         <h1 className="text-3xl font-black text-white tracking-tight">Free Agency</h1>

@@ -180,7 +180,7 @@ export default async function OpposingTeamsPage({
                         </div>
                       </div>
                       <span className="text-[10px] text-emerald-400 font-bold uppercase bg-emerald-950/40 border border-emerald-900/20 px-2 py-0.5 rounded">
-                        {g.type === 'top20' ? 'Weekly Top 20' : 'Permanent'}
+                        {g.type === 'top20' ? 'Weekly Top 25' : 'Permanent'}
                       </span>
                     </div>
                   ))}
@@ -205,7 +205,7 @@ export default async function OpposingTeamsPage({
                         </div>
                       </div>
                       <span className="text-[10px] text-neutral-500 font-bold uppercase bg-neutral-850 border border-neutral-800 px-2 py-0.5 rounded">
-                        {g.type === 'top20' ? 'Weekly Top 20' : 'Permanent'}
+                        {g.type === 'top20' ? 'Weekly Top 25' : 'Permanent'}
                       </span>
                     </div>
                   ))}

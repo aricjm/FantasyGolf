@@ -73,7 +73,7 @@ export default function LineupManager({ roster, lineup, tournamentId, isLocked }
                   ? 'bg-amber-950/40 text-amber-400 border border-amber-800/20'
                   : 'bg-neutral-800/50 text-neutral-400 border border-neutral-750'
               }`}>
-                {golfer.type === 'top20' ? 'Top 20 Weekly' : 'Season Permanent'}
+                {golfer.type === 'top20' ? 'Top 25 Weekly' : 'Season Roster'}
               </span>
               <span className="text-[9px] text-neutral-500 font-medium lowercase">
                 via {golfer.acquiredVia.replace('_', ' ')}

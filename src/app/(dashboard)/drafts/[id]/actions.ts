@@ -51,7 +51,8 @@ export async function draftGolfer(draftId: number, golferId: number) {
   const activePickerIndex = isEvenRound ? 9 - roundPickIndex : roundPickIndex;
   const activePickerId = pickOrder[activePickerIndex];
 
-  if (activePickerId !== userId) {
+  const isAdmin = (session.user as any)?.role === 'admin';
+  if (activePickerId !== userId && !isAdmin) {
     return { error: 'It is not your turn to draft' };
   }
 
@@ -78,21 +79,21 @@ export async function draftGolfer(draftId: number, golferId: number) {
   }
 
   if (draft.type === 'long') {
-    // Rank 21 to 125
-    if (golfer.rank < 21 || golfer.rank > 125) {
-      return { error: 'Invalid pick: Preseason draft only allows golfers ranked #21 to #125.' };
+    // Rank 26 to 125
+    if (golfer.rank < 26 || golfer.rank > 125) {
+      return { error: 'Invalid pick: Preseason draft only allows golfers ranked #26 to #125.' };
     }
   } else {
-    // Rank 1 to 20
-    if (golfer.rank > 20) {
-      return { error: 'Invalid pick: Weekly short draft only allows top 20 ranked golfers.' };
+    // Rank 1 to 25
+    if (golfer.rank > 25) {
+      return { error: 'Invalid pick: Weekly short draft only allows top 25 ranked golfers.' };
     }
   }
 
   // 5. Insert Draft Pick record
   await db.insert(draftPicks).values({
     draftId,
-    userId,
+    userId: activePickerId, // Always use activePickerId in case an admin is drafting on their behalf
     golferId,
     round: currentRound,
     pickNumber: currentPick,
@@ -100,7 +101,7 @@ export async function draftGolfer(draftId: number, golferId: number) {
 
   // 6. Add golfer to User's Roster
   await db.insert(rosters).values({
-    userId,
+    userId: activePickerId,
     golferId,
     acquiredVia: draft.type === 'long' ? 'long_draft' : 'short_draft',
     tournamentId: draft.type === 'short' ? draft.tournamentId : null, // Weekly short draft players clear after tournament

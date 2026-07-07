@@ -29,8 +29,8 @@ export default function FreeAgentsList({ freeAgents, myRoster }: FreeAgentsListP
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  // Filter out top 20 golfers from drop-down list (can never drop top-20 golfers)
-  const droppableRoster = myRoster.filter((g) => g.rank > 20 && g.type !== 'top20');
+  // Filter out top 25 golfers from drop-down list (can never drop ranks 1-25)
+  const droppableRoster = myRoster.filter((g) => g.rank > 25 && g.type !== 'top20');
   const rosterLimitReached = myRoster.length >= 10;
 
   const handleClaim = async (freeAgentId: number) => {

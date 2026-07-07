@@ -86,3 +86,44 @@ export async function loginUser(prevState: any, formData: FormData) {
     return { error: 'Invalid credentials or user does not exist' };
   }
 }
+
+export async function resetPassword(formData: FormData) {
+  try {
+    const email = (formData.get('email') as string)?.toLowerCase().trim();
+    const leaguePassword = formData.get('leaguePassword') as string;
+    const newPassword = formData.get('newPassword') as string;
+
+    if (!email || !leaguePassword || !newPassword) {
+      return { error: 'All fields are required' };
+    }
+
+    // Verify league passphrase
+    if (leaguePassword.trim() !== 'pgadads') {
+      return { error: 'Invalid league passphrase' };
+    }
+
+    if (newPassword.length < 8) {
+      return { error: 'New password must be at least 8 characters' };
+    }
+
+    // Check user exists
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
+
+    if (!user) {
+      return { error: 'No account found with that email address' };
+    }
+
+    // Hash new password and update
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+    await db.update(users).set({ passwordHash }).where(eq(users.email, email));
+
+    return { success: true };
+  } catch (error: any) {
+    console.error('Password reset error:', error);
+    return { error: error.message || 'Something went wrong. Please try again.' };
+  }
+}

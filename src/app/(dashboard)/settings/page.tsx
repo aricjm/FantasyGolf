@@ -11,12 +11,12 @@ export default async function SettingsPage() {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      
+
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-black text-white tracking-tight">League Settings</h1>
+        <h1 className="text-3xl font-black text-white tracking-tight">Settings</h1>
         <p className="text-sm text-neutral-400 mt-1">
-          Adjust your preferences and review official scoring rules.
+          Adjust your app preferences and display options.
         </p>
       </div>
 

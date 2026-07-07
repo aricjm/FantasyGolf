@@ -102,7 +102,7 @@ export default function Navbar({ session }: NavbarProps) {
             <button
               onClick={() => setLeagueOpen(!leagueOpen)}
               className={`flex items-center gap-1 ${linkClass(
-                isActive('/standings') || isActive('/settings') || isActive('/recaps')
+                isActive('/standings') || isActive('/settings') || isActive('/scoring') || isActive('/recaps')
               )}`}
             >
               League
@@ -121,8 +121,11 @@ export default function Navbar({ session }: NavbarProps) {
                 <Link href="/standings" className={dropdownItemClass(isActive('/standings'))} onClick={() => setLeagueOpen(false)}>
                   Standings
                 </Link>
+                <Link href="/scoring" className={dropdownItemClass(isActive('/scoring'))} onClick={() => setLeagueOpen(false)}>
+                  Scoring Rules
+                </Link>
                 <Link href="/settings" className={dropdownItemClass(isActive('/settings'))} onClick={() => setLeagueOpen(false)}>
-                  Scoring Rules / Settings
+                  Settings
                 </Link>
                 <div className="h-px bg-neutral-800 my-1"></div>
                 <Link href="/recaps?tab=drafts" className={dropdownItemClass(pathname.startsWith('/recaps') && pathname.includes('tab=drafts'))} onClick={() => setLeagueOpen(false)}>
@@ -240,6 +243,12 @@ export default function Navbar({ session }: NavbarProps) {
         </Link>
         <Link href="/opposing-teams" className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-neutral-300 hover:text-white">
           Opponents
+        </Link>
+        <Link href="/scoring" className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-neutral-300 hover:text-white">
+          Scoring
+        </Link>
+        <Link href="/settings" className="px-2.5 py-1.5 rounded-lg text-xs font-bold text-neutral-300 hover:text-white">
+          Settings
         </Link>
       </div>
     </nav>

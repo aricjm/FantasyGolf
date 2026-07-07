@@ -48,6 +48,8 @@ interface DraftRoomProps {
   picks: DraftPick[];
   myPicks: DraftPick[];
   userId: number;
+  isAdmin?: boolean;
+  historicalResults?: Record<number, string>;
 }
 
 export default function DraftRoom({
@@ -57,6 +59,8 @@ export default function DraftRoom({
   picks,
   myPicks,
   userId,
+  isAdmin = false,
+  historicalResults = {},
 }: DraftRoomProps) {
   const [search, setSearch] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -72,7 +76,7 @@ export default function DraftRoom({
   const activePickerIndex = isEvenRound ? 9 - roundPickIndex : roundPickIndex;
   const activePickerId = pickOrder[activePickerIndex];
   
-  const isMyTurn = activePickerId === userId && draft.status !== 'completed';
+  const isMyTurn = (activePickerId === userId || isAdmin) && draft.status !== 'completed';
   const activePicker = users.find((u) => u.id === activePickerId);
 
   // 2. Format pick queue (the next 5 picks)
@@ -267,13 +271,16 @@ export default function DraftRoom({
                     <th className="px-6 py-4">World Rank</th>
                     <th className="px-6 py-4">Name</th>
                     <th className="px-6 py-4">Country</th>
+                    {draft.type === 'short' && (
+                      <th className="px-6 py-4">2025 Result</th>
+                    )}
                     <th className="px-6 py-4 text-right">Action</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-neutral-800/50">
                   {filteredGolfers.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="px-6 py-12 text-center text-xs text-neutral-500">
+                      <td colSpan={draft.type === 'short' ? 5 : 4} className="px-6 py-12 text-center text-xs text-neutral-500">
                         No available golfers match your search criteria.
                       </td>
                     </tr>
@@ -292,6 +299,17 @@ export default function DraftRoom({
                         <td className="px-6 py-4 text-xs text-neutral-400">
                           {golfer.country || 'N/A'}
                         </td>
+                        {draft.type === 'short' && (
+                          <td className="px-6 py-4">
+                            <span className={`px-2 py-1 rounded text-[10px] font-bold ${
+                              historicalResults[golfer.id] === 'CUT' ? 'bg-red-500/10 text-red-400 border border-red-500/20' :
+                              historicalResults[golfer.id] ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' :
+                              'bg-neutral-800 text-neutral-500 border border-neutral-700'
+                            }`}>
+                              {historicalResults[golfer.id] || 'DNP'}
+                            </span>
+                          </td>
+                        )}
                         <td className="px-6 py-4 text-right">
                           <button
                             onClick={() => handleDraft(golfer.id)}
