@@ -40,7 +40,7 @@ export default async function ScoringPage() {
                 <div className="space-y-2 text-sm text-neutral-300">
                   <div className="flex justify-between border-b border-neutral-850/60 pb-1.5">
                     <span>Eagle</span>
-                    <span className="font-bold text-emerald-400">+8 points</span>
+                    <span className="font-bold text-emerald-400">+10 points</span>
                   </div>
                   <div className="flex justify-between border-b border-neutral-850/60 pb-1.5">
                     <span>Birdie</span>
@@ -61,7 +61,7 @@ export default async function ScoringPage() {
                     <span className="font-bold text-red-500">-8 points</span>
                   </div>
                   <div className="flex justify-between border-b border-neutral-850/60 pb-1.5">
-                    <span>Triple Bogey or worse</span>
+                    <span>Triple Bogey+</span>
                     <span className="font-bold text-red-600">-12 points</span>
                   </div>
                   <div className="flex justify-between border-b border-neutral-850/60 pb-1.5">

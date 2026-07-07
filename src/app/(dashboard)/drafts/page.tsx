@@ -15,11 +15,20 @@ async function initializeDrafts() {
   if (allUsers.length === 0) return;
 
   const userIds = allUsers.map((u) => u.id);
-  // Ensure we have exactly 10 users or pad with mock IDs for testing
   const paddedUserIds = [...userIds];
-  while (paddedUserIds.length < 10) {
-    // Pad with temporary placeholder user IDs for draft room demo
-    paddedUserIds.push(100 + paddedUserIds.length);
+  
+  if (paddedUserIds.length < 10) {
+    const needed = 10 - paddedUserIds.length;
+    const mockUsers = Array.from({ length: needed }).map((_, i) => ({
+      name: `Manager ${userIds.length + i + 1}`,
+      email: `mock${userIds.length + i + 1}@example.com`,
+      passwordHash: 'mock',
+      teamName: `Team ${userIds.length + i + 1}`,
+      teamAbbr: `T${userIds.length + i + 1}`,
+    }));
+    
+    const inserted = await db.insert(users).values(mockUsers).returning({ id: users.id });
+    paddedUserIds.push(...inserted.map(u => u.id));
   }
 
   // 1. Initialize preseason long draft if it doesn't exist

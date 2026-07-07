@@ -1,12 +1,21 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
+import { db } from '@/db';
+import { users } from '@/db/schema';
 import SettingsClient from './SettingsClient';
 
 export default async function SettingsPage() {
   const session = await auth();
   if (!session?.user?.id) {
     redirect('/auth/signin');
+  }
+
+  const isAdmin = (session.user as any).role === 'admin';
+  let allUsers: any[] = [];
+  
+  if (isAdmin) {
+    allUsers = await db.select().from(users).orderBy(users.id);
   }
 
   return (
@@ -20,7 +29,7 @@ export default async function SettingsPage() {
         </p>
       </div>
 
-      <SettingsClient />
+      <SettingsClient isAdmin={isAdmin} users={allUsers} />
 
     </div>
   );

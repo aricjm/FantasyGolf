@@ -1,4 +1,4 @@
-import { pgTable, serial, text, integer, timestamp, boolean, doublePrecision } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, integer, timestamp, boolean, doublePrecision, jsonb } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 // Users table (League participants)
@@ -21,6 +21,11 @@ export const golfers = pgTable('golfers', {
   rank: integer('rank').notNull(),
   country: text('country'),
   type: text('type').notNull(), // 'top20', 'field', 'liv'
+  espnId: text('espn_id'),
+  starts: integer('starts').default(0).notNull(),
+  cutsMade: integer('cuts_made').default(0).notNull(),
+  avgPoints: doublePrecision('avg_points').default(0).notNull(),
+  historicalResults: jsonb('historical_results').default([]),
 });
 
 // Tournaments table (24 events)
@@ -41,6 +46,9 @@ export const draftStates = pgTable('draft_states', {
   currentRound: integer('current_round').default(1).notNull(),
   currentPick: integer('current_pick').default(1).notNull(),
   pickOrder: text('pick_order').notNull(), // JSON string representing array of user IDs: "[1, 3, 2...]"
+  startTime: timestamp('start_time'), // Optional scheduled start time
+  lastActionAt: timestamp('last_action_at'), // Base time for the 60-second timer
+  autoDraftUsers: text('auto_draft_users').default('[]').notNull(), // JSON string representing array of user IDs on auto-draft
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 

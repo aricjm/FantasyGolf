@@ -32,6 +32,10 @@ export default async function DraftRoomPage({ params }: { params: Promise<{ id: 
       currentPick: draftStates.currentPick,
       pickOrder: draftStates.pickOrder,
       tournamentName: tournaments.name,
+      createdAt: draftStates.createdAt,
+      startTime: draftStates.startTime,
+      lastActionAt: draftStates.lastActionAt,
+      autoDraftUsers: draftStates.autoDraftUsers,
     })
     .from(draftStates)
     .leftJoin(tournaments, eq(draftStates.tournamentId, tournaments.id))
@@ -79,6 +83,7 @@ export default async function DraftRoomPage({ params }: { params: Promise<{ id: 
       golferRank: golfers.rank,
       userName: users.name,
       userTeamName: users.teamName,
+      createdAt: draftPicks.createdAt,
     })
     .from(draftPicks)
     .innerJoin(golfers, eq(draftPicks.golferId, golfers.id))
@@ -92,11 +97,8 @@ export default async function DraftRoomPage({ params }: { params: Promise<{ id: 
     .filter((g) => !draftedGolferIds.includes(g.id))
     .sort((a, b) => a.rank - b.rank);
 
-  // 6. User's specific picks in this session
-  const myPicks = picks.filter((p) => p.userId === userId);
-
   // Get 2025 Historical Results if this is a tournament-specific draft
-  let historicalResults: Record<number, string> = {};
+  let historicalResults: Record<string, {rank: string, points: number}> = {};
   if (draft.tournamentName) {
     historicalResults = await getHistoricalTournamentResults(draft.tournamentName, 2025);
   }
@@ -107,7 +109,6 @@ export default async function DraftRoomPage({ params }: { params: Promise<{ id: 
       users={allUsers}
       availableGolfers={availableGolfers}
       picks={picks}
-      myPicks={myPicks}
       userId={userId}
       isAdmin={isAdmin}
       historicalResults={historicalResults}
