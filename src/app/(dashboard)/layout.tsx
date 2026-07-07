@@ -3,7 +3,7 @@ import { auth } from '@/auth';
 import Navbar from '@/app/components/Navbar';
 import { db } from '@/db';
 import { users } from '@/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, ne } from 'drizzle-orm';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -13,6 +13,14 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
   const session = await auth();
 
   let navbarSession = session;
+  let opponents: {
+    id: number;
+    name: string | null;
+    teamName: string | null;
+    teamAbbr: string | null;
+    logoUrl: string | null;
+  }[] = [];
+
   if (session?.user?.id) {
     const userId = parseInt(session.user.id, 10);
     const [user] = await db
@@ -34,6 +42,18 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
         } as any,
       };
     }
+
+    // Fetch other managers (opponents) in the league
+    opponents = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        teamName: users.teamName,
+        teamAbbr: users.teamAbbr,
+        logoUrl: users.logoUrl,
+      })
+      .from(users)
+      .where(ne(users.id, userId));
   }
 
   return (
@@ -43,7 +63,7 @@ export default async function DashboardLayout({ children }: DashboardLayoutProps
       <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-amber-500/5 rounded-full filter blur-[120px] pointer-events-none"></div>
 
       {/* Main navigation */}
-      <Navbar session={navbarSession} />
+      <Navbar session={navbarSession} opponents={opponents} />
 
       {/* Main Content Area */}
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">

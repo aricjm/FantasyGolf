@@ -25,9 +25,10 @@ interface LineupManagerProps {
   lineup: LineupItem[];
   tournamentId: string;
   isLocked: boolean;
+  readOnly?: boolean;
 }
 
-export default function LineupManager({ roster, lineup, tournamentId, isLocked }: LineupManagerProps) {
+export default function LineupManager({ roster, lineup, tournamentId, isLocked, readOnly = false }: LineupManagerProps) {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -82,17 +83,19 @@ export default function LineupManager({ roster, lineup, tournamentId, isLocked }
           </div>
         </div>
 
-        <button
-          onClick={() => handleToggle(golfer.id)}
-          disabled={isLocked || isPending}
-          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none ${
-            isStarter
-              ? 'bg-red-950/40 text-red-400 hover:bg-red-900/30 border border-red-900/40'
-              : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-900/20'
-          }`}
-        >
-          {isStarter ? 'Bench' : 'Start'}
-        </button>
+        {!readOnly && (
+          <button
+            onClick={() => handleToggle(golfer.id)}
+            disabled={isLocked || isPending}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition duration-200 active:scale-95 disabled:opacity-50 disabled:pointer-events-none ${
+              isStarter
+                ? 'bg-red-950/40 text-red-400 hover:bg-red-900/30 border border-red-900/40'
+                : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-900/20'
+            }`}
+          >
+            {isStarter ? 'Bench' : 'Start'}
+          </button>
+        )}
       </div>
     );
   };
@@ -111,7 +114,7 @@ export default function LineupManager({ roster, lineup, tournamentId, isLocked }
           <h3 className="text-sm font-black text-emerald-400 tracking-wider uppercase">
             Active Starters ({starters.length} / 6)
           </h3>
-          {starters.length < 6 && (
+          {starters.length < 6 && !readOnly && (
             <span className="text-[10px] text-amber-500 font-bold animate-pulse">
               Incomplete lineup: Need to start {6 - starters.length} more golfers!
             </span>
@@ -120,7 +123,7 @@ export default function LineupManager({ roster, lineup, tournamentId, isLocked }
         
         {starters.length === 0 ? (
           <div className="p-8 text-center bg-neutral-900/10 border border-dashed border-neutral-850 rounded-2xl text-neutral-500 text-sm">
-            No starting golfers chosen yet. Click "Start" on your players below to select them.
+            {readOnly ? 'No starting golfers chosen yet.' : 'No starting golfers chosen yet. Click "Start" on your players below to select them.'}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

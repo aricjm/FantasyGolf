@@ -20,6 +20,9 @@ interface Golfer {
   country: string | null;
   type: string;
   espnId?: string | null;
+  starts: number;
+  cutsMade: number;
+  avgPoints: number;
 }
 
 interface DraftPick {
@@ -43,9 +46,10 @@ interface Draft {
   currentPick: number;
   tournamentName: string | null;
   createdAt: string | Date;
-  startTime?: string | Date | null;
-  lastActionAt?: string | Date | null;
+  startTime: string | Date | null;
+  lastActionAt: string | Date | null;
   autoDraftUsers: string;
+  pickOrder: string;
 }
 
 interface DraftRoomProps {

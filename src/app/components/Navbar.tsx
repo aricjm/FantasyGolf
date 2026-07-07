@@ -5,6 +5,14 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
 
+interface Opponent {
+  id: number;
+  name: string | null;
+  teamName: string | null;
+  teamAbbr: string | null;
+  logoUrl: string | null;
+}
+
 interface NavbarProps {
   session: {
     user?: {
@@ -18,14 +26,18 @@ interface NavbarProps {
       role?: string;
     };
   } | null;
+  opponents?: Opponent[];
 }
 
-export default function Navbar({ session }: NavbarProps) {
+export default function Navbar({ session, opponents = [] }: NavbarProps) {
   const pathname = usePathname();
   const [leagueOpen, setLeagueOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [opponentsOpen, setOpponentsOpen] = useState(false);
+  
   const leagueRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+  const opponentsRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns on click outside
   useEffect(() => {
@@ -35,6 +47,9 @@ export default function Navbar({ session }: NavbarProps) {
       }
       if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
         setProfileOpen(false);
+      }
+      if (opponentsRef.current && !opponentsRef.current.contains(event.target as Node)) {
+        setOpponentsOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -161,9 +176,54 @@ export default function Navbar({ session }: NavbarProps) {
             Majors
           </Link>
 
-          <Link href="/opposing-teams" className={linkClass(isActive('/opposing-teams'))}>
-            Opposing Teams
-          </Link>
+          {/* Opponents Dropdown */}
+          {opponents.length > 0 && (
+            <div className="relative" ref={opponentsRef}>
+              <button
+                onClick={() => setOpponentsOpen(!opponentsOpen)}
+                className={`flex items-center gap-1 ${linkClass(
+                  pathname.startsWith('/opposing-teams')
+                )}`}
+              >
+                Opponents
+                <svg
+                  className={`w-4 h-4 transition-transform duration-200 ${opponentsOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {opponentsOpen && (
+                <div className="absolute left-0 mt-2 w-64 rounded-xl bg-neutral-900 border border-neutral-800 shadow-2xl py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-neutral-850">
+                  {opponents.map((opp) => {
+                    const isOppActive = pathname === `/opposing-teams/${opp.id}`;
+                    return (
+                      <Link
+                        key={opp.id}
+                        href={`/opposing-teams/${opp.id}`}
+                        className={dropdownItemClass(isOppActive)}
+                        onClick={() => setOpponentsOpen(false)}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          {opp.logoUrl ? (
+                            <img src={opp.logoUrl} alt="Logo" className="w-5 h-5 rounded object-cover border border-white/10" />
+                          ) : (
+                            <div className="w-5 h-5 bg-emerald-950 border border-emerald-700/50 rounded flex items-center justify-center font-bold text-[9px] text-emerald-300 uppercase">
+                              {opp.teamAbbr || 'OP'}
+                            </div>
+                          )}
+                          <span className="truncate">{opp.teamName || opp.name}</span>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Right: User Profile Dropdown */}

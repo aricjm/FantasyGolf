@@ -141,12 +141,12 @@ export default async function ScoringPage() {
                   { place: '1st', pts: 20, color: 'text-amber-400', bg: 'bg-amber-500/5 border-amber-500/20' },
                   { place: '2nd', pts: 17, color: 'text-neutral-200', bg: 'bg-neutral-500/5 border-neutral-500/20' },
                   { place: '3rd', pts: 14, color: 'text-amber-600', bg: 'bg-amber-800/5 border-amber-800/20' },
-                  { place: '4th', pts: 12, color: 'text-white', bg: 'bg-neutral-950/40 border-neutral-850' },
-                  { place: '5th', pts: 10, color: 'text-white', bg: 'bg-neutral-950/40 border-neutral-850' },
-                  { place: '6th', pts: 8, color: 'text-white', bg: 'bg-neutral-950/40 border-neutral-850' },
-                  { place: '7th', pts: 6, color: 'text-white', bg: 'bg-neutral-950/40 border-neutral-850' },
-                  { place: '8th', pts: 4, color: 'text-white', bg: 'bg-neutral-950/40 border-neutral-850' },
-                  { place: '9th', pts: 2, color: 'text-white', bg: 'bg-neutral-950/40 border-neutral-850' },
+                  { place: '4th', pts: 12, color: 'text-emerald-400', bg: 'bg-neutral-950/40 border-neutral-850' },
+                  { place: '5th', pts: 10, color: 'text-emerald-400', bg: 'bg-neutral-950/40 border-neutral-850' },
+                  { place: '6th', pts: 8, color: 'text-emerald-400', bg: 'bg-neutral-950/40 border-neutral-850' },
+                  { place: '7th', pts: 6, color: 'text-emerald-400', bg: 'bg-neutral-950/40 border-neutral-850' },
+                  { place: '8th', pts: 4, color: 'text-emerald-400', bg: 'bg-neutral-950/40 border-neutral-850' },
+                  { place: '9th', pts: 2, color: 'text-emerald-400', bg: 'bg-neutral-950/40 border-neutral-850' },
                   { place: '10th', pts: 0, color: 'text-red-400', bg: 'bg-red-950/10 border-red-900/20' },
                 ].map(({ place, pts, color, bg }) => (
                   <div key={place} className={`p-3 border rounded-xl text-center ${bg}`}>
@@ -160,12 +160,12 @@ export default async function ScoringPage() {
             <div className="p-4 bg-amber-500/5 border border-amber-500/20 rounded-xl text-sm text-amber-200/80 space-y-2">
               <p className="font-black text-amber-400 text-base">🏆 How the Champion is Determined</p>
               <p className="text-xs leading-relaxed">
-                <span className="text-white font-semibold">Tournament Points</span> measure your team&apos;s total fantasy score each week — these determine your rank vs. other teams per tournament.
+                <span className="text-amber-400 font-semibold">Tournament Points </span> measure your team&apos;s total fantasy score each week — these determine your rank vs. other teams per tournament.
               </p>
               <p className="text-xs leading-relaxed">
-                <span className="text-white font-semibold">Season Points</span> are earned based on that rank (e.g. finishing 1st in a tournament earns 20 Season Points). These accumulate over every tournament all year.
+                <span className="text-amber-400 font-semibold">Season Points</span> are earned based on that rank (e.g. finishing 1st in a tournament earns 20 Season Points). These accumulate over every tournament all year.
               </p>
-              <p className="text-xs leading-relaxed font-semibold text-amber-300">
+              <p className="text-xs leading-relaxed font-semibold text-white">
                 The team with the most Season Points at the end of the season is crowned the league champion.
               </p>
             </div>

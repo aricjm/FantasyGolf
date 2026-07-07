@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useTransition } from 'react';
-import { adminUpdateTeamDetails } from './actions';
+import { adminUpdateTeamDetails, resetAllDraftsAndTeams } from './actions';
 
 const PRESET_LOGOS = [
   { id: 'armadillo', url: '/images/team_logos/armadillo_approach_logo.png' },
@@ -49,7 +49,32 @@ export default function SettingsClient({ isAdmin, users = [] }: SettingsClientPr
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
   const [editLogoUrl, setEditLogoUrl] = useState<string>('');
+  const [clearTeamProfiles, setClearTeamProfiles] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  const handleResetAll = () => {
+    const confirmation = window.confirm(
+      "CRITICAL ACTION:\nAre you sure you want to delete ALL drafts, rosters, lineups, trades, and scores?\n\nThis will completely reset the league. This action is permanent and cannot be undone."
+    );
+    if (!confirmation) return;
+
+    if (clearTeamProfiles) {
+      const secondConfirmation = window.confirm(
+        "WARNING:\nYou have selected to also clear team profiles. This will delete all manager team names, abbreviations, and logos. Are you absolutely sure?"
+      );
+      if (!secondConfirmation) return;
+    }
+
+    startTransition(async () => {
+      const res = await resetAllDraftsAndTeams(clearTeamProfiles);
+      if (res?.success) {
+        alert("League data has been successfully reset!");
+        setClearTeamProfiles(false);
+      } else {
+        alert("Reset failed: " + (res?.error || "Unknown error"));
+      }
+    });
+  };
 
   // Load the initial theme on component mount
   useEffect(() => {
@@ -110,117 +135,157 @@ export default function SettingsClient({ isAdmin, users = [] }: SettingsClientPr
       </div>
 
       {isAdmin && (
-        <div className="mt-12 space-y-6">
-          <div className="border-b border-neutral-800 pb-2">
-            <h2 className="text-xl font-black text-emerald-400 tracking-widest uppercase">Admin: Manage Teams</h2>
-            <p className="text-xs text-neutral-400 mt-1">Edit profile details for any manager in the system.</p>
-          </div>
+        <>
+          <div className="mt-12 space-y-6">
+            <div className="border-b border-neutral-800 pb-2">
+              <h2 className="text-xl font-black text-emerald-400 tracking-widest uppercase">Admin: Manage Teams</h2>
+              <p className="text-xs text-neutral-400 mt-1">Edit profile details for any manager in the system.</p>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {users.map(user => (
-              <div key={user.id} className="bg-neutral-900/40 border border-neutral-800 p-4 rounded-xl">
-                {editingUserId === user.id ? (
-                  <form 
-                    action={(formData) => {
-                      startTransition(async () => {
-                        const res = await adminUpdateTeamDetails(formData);
-                        if (res.success) {
-                          setEditingUserId(null);
-                        } else {
-                          alert(res.error);
-                        }
-                      });
-                    }}
-                    className="space-y-3"
-                  >
-                    <input type="hidden" name="userId" value={user.id} />
-                    
-                    <div>
-                      <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Manager Name</label>
-                      <input type="text" name="name" defaultValue={user.name} required className="w-full bg-neutral-950 border border-neutral-800 rounded px-2 py-1 text-xs text-white" />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Email</label>
-                      <input type="email" name="email" defaultValue={user.email} required className="w-full bg-neutral-950 border border-neutral-800 rounded px-2 py-1 text-xs text-white" />
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Team Name</label>
-                      <input type="text" name="teamName" defaultValue={user.teamName || ''} className="w-full bg-neutral-950 border border-neutral-800 rounded px-2 py-1 text-xs text-white" />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Team Abbr (Max 4)</label>
-                      <input type="text" name="teamAbbr" defaultValue={user.teamAbbr || ''} maxLength={4} className="w-full bg-neutral-950 border border-neutral-800 rounded px-2 py-1 text-xs text-white uppercase" />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Logo URL</label>
-                      <input 
-                        type="text" 
-                        name="logoUrl" 
-                        value={editLogoUrl} 
-                        onChange={(e) => setEditLogoUrl(e.target.value)}
-                        className="w-full bg-neutral-950 border border-neutral-800 rounded px-2 py-1 text-xs text-white" 
-                      />
-                      <div className="mt-2 p-2 bg-neutral-950 border border-neutral-800 rounded-lg">
-                        <span className="text-[9px] text-neutral-500 font-bold uppercase block mb-1.5">Or choose a preset</span>
-                        <div className="grid grid-cols-8 gap-1">
-                          {PRESET_LOGOS.map(p => (
-                            <button
-                              key={p.id}
-                              type="button"
-                              onClick={() => setEditLogoUrl(p.url)}
-                              className={`w-full aspect-square rounded overflow-hidden border transition ${
-                                editLogoUrl === p.url 
-                                  ? 'border-emerald-500 ring-1 ring-emerald-500/50 scale-105' 
-                                  : 'border-neutral-800 hover:border-neutral-700'
-                              }`}
-                              title={p.id}
-                            >
-                              <img src={p.url} alt={p.id} className="w-full h-full object-cover" />
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-end gap-2 pt-2">
-                      <button type="button" onClick={() => setEditingUserId(null)} className="px-3 py-1 text-xs text-neutral-400 hover:text-white">Cancel</button>
-                      <button type="submit" disabled={isPending} className="px-3 py-1 text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded font-bold transition">Save</button>
-                    </div>
-                  </form>
-                ) : (
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      {user.logoUrl ? (
-                        <img src={user.logoUrl} alt="Logo" className="w-10 h-10 rounded-full bg-neutral-800 object-cover" />
-                      ) : (
-                        <div className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 font-black text-sm">
-                          {user.teamAbbr?.substring(0, 2) || user.name.charAt(0)}
-                        </div>
-                      )}
-                      <div>
-                        <div className="font-bold text-white text-sm">{user.teamName || 'No Team Name'} <span className="text-emerald-500 ml-1">{user.teamAbbr ? `(${user.teamAbbr})` : ''}</span></div>
-                        <div className="text-xs text-neutral-400">{user.name} • {user.email}</div>
-                      </div>
-                    </div>
-                    <button 
-                      onClick={() => {
-                        setEditingUserId(user.id);
-                        setEditLogoUrl(user.logoUrl || '');
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {users.map(user => (
+                <div key={user.id} className="bg-neutral-900/40 border border-neutral-800 p-4 rounded-xl">
+                  {editingUserId === user.id ? (
+                    <form 
+                      action={(formData) => {
+                        startTransition(async () => {
+                          const res = await adminUpdateTeamDetails(formData);
+                          if (res.success) {
+                            setEditingUserId(null);
+                          } else {
+                            alert(res.error);
+                          }
+                        });
                       }}
-                      className="px-3 py-1.5 border border-neutral-700 bg-neutral-800 hover:bg-neutral-700 text-xs text-white font-bold rounded-lg transition"
+                      className="space-y-3"
                     >
-                      Edit
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
+                      <input type="hidden" name="userId" value={user.id} />
+                      
+                      <div>
+                        <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Manager Name</label>
+                        <input type="text" name="name" defaultValue={user.name} required className="w-full bg-neutral-950 border border-neutral-800 rounded px-2 py-1 text-xs text-white" />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Email</label>
+                        <input type="email" name="email" defaultValue={user.email} required className="w-full bg-neutral-950 border border-neutral-800 rounded px-2 py-1 text-xs text-white" />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Team Name</label>
+                        <input type="text" name="teamName" defaultValue={user.teamName || ''} className="w-full bg-neutral-950 border border-neutral-800 rounded px-2 py-1 text-xs text-white" />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Team Abbr (Max 4)</label>
+                        <input type="text" name="teamAbbr" defaultValue={user.teamAbbr || ''} maxLength={4} className="w-full bg-neutral-950 border border-neutral-800 rounded px-2 py-1 text-xs text-white uppercase" />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1">Logo URL</label>
+                        <input 
+                          type="text" 
+                          name="logoUrl" 
+                          value={editLogoUrl} 
+                          onChange={(e) => setEditLogoUrl(e.target.value)}
+                          className="w-full bg-neutral-950 border border-neutral-800 rounded px-2 py-1 text-xs text-white" 
+                        />
+                        <div className="mt-2 p-2 bg-neutral-950 border border-neutral-800 rounded-lg">
+                          <span className="text-[9px] text-neutral-500 font-bold uppercase block mb-1.5">Or choose a preset</span>
+                          <div className="grid grid-cols-8 gap-1">
+                            {PRESET_LOGOS.map(p => (
+                              <button
+                                key={p.id}
+                                type="button"
+                                onClick={() => setEditLogoUrl(p.url)}
+                                className={`w-full aspect-square rounded overflow-hidden border transition ${
+                                  editLogoUrl === p.url 
+                                    ? 'border-emerald-500 ring-1 ring-emerald-500/50 scale-105' 
+                                    : 'border-neutral-800 hover:border-neutral-700'
+                                }`}
+                                title={p.id}
+                              >
+                                <img src={p.url} alt={p.id} className="w-full h-full object-cover" />
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end gap-2 pt-2">
+                        <button type="button" onClick={() => setEditingUserId(null)} className="px-3 py-1 text-xs text-neutral-400 hover:text-white">Cancel</button>
+                        <button type="submit" disabled={isPending} className="px-3 py-1 text-xs bg-emerald-600 hover:bg-emerald-500 text-white rounded font-bold transition">Save</button>
+                      </div>
+                    </form>
+                  ) : (
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        {user.logoUrl ? (
+                          <img src={user.logoUrl} alt="Logo" className="w-10 h-10 rounded-full bg-neutral-800 object-cover" />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-500 font-black text-sm">
+                            {user.teamAbbr?.substring(0, 2) || user.name.charAt(0)}
+                          </div>
+                        )}
+                        <div>
+                          <div className="font-bold text-white text-sm">{user.teamName || 'No Team Name'} <span className="text-emerald-500 ml-1">{user.teamAbbr ? `(${user.teamAbbr})` : ''}</span></div>
+                          <div className="text-xs text-neutral-400">{user.name} • {user.email}</div>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => {
+                          setEditingUserId(user.id);
+                          setEditLogoUrl(user.logoUrl || '');
+                        }}
+                        className="px-3 py-1.5 border border-neutral-700 bg-neutral-800 hover:bg-neutral-700 text-xs text-white font-bold rounded-lg transition"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+
+          {/* Reset Section */}
+          <div className="mt-12 space-y-6">
+            <div className="border-b border-neutral-800 pb-2">
+              <h2 className="text-xl font-black text-red-500 tracking-widest uppercase">Admin: Danger Zone</h2>
+              <p className="text-xs text-neutral-400 mt-1">Reset drafts, rosters, lineups, and database scores.</p>
+            </div>
+
+            <div className="bg-red-950/10 border border-red-900/30 p-6 rounded-2xl space-y-5">
+              <div>
+                <span className="text-sm font-bold text-white block">Reset All Drafts & Teams</span>
+                <span className="text-xs text-neutral-400 mt-1.5 block leading-relaxed">
+                  This operation will permanently delete all draft sessions, picks, team rosters, starting lineups, major selections, pending/accepted trades, transaction logs, and scores. <strong>This cannot be undone.</strong>
+                </span>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  id="clearTeamProfiles"
+                  checked={clearTeamProfiles}
+                  onChange={(e) => setClearTeamProfiles(e.target.checked)}
+                  className="w-4 h-4 rounded border-neutral-800 text-red-600 focus:ring-red-500 bg-neutral-950 accent-red-600 cursor-pointer"
+                />
+                <label htmlFor="clearTeamProfiles" className="text-xs text-neutral-300 font-semibold cursor-pointer select-none">
+                  Also reset manager team profiles (names, abbreviations, and logos)
+                </label>
+              </div>
+
+              <button
+                onClick={handleResetAll}
+                disabled={isPending}
+                className="px-4 py-2.5 bg-red-700 hover:bg-red-600 disabled:opacity-50 text-white font-extrabold rounded-xl text-xs transition active:scale-95 shadow-lg shadow-red-950/20 cursor-pointer"
+              >
+                {isPending ? 'Resetting...' : 'Reset Drafts & Teams'}
+              </button>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

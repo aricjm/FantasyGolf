@@ -9,16 +9,17 @@ import TradeProposer from './TradeProposer';
 export default async function TradesPage({
   searchParams,
 }: {
-  searchParams: { propose?: string; counter?: string };
+  searchParams: Promise<{ propose?: string; counter?: string }>;
 }) {
   const session = await auth();
   if (!session?.user?.id) {
     redirect('/auth/signin');
   }
 
+  const resolvedParams = await searchParams;
   const userId = parseInt(session.user.id, 10);
-  let opponentId = searchParams.propose ? parseInt(searchParams.propose, 10) : null;
-  const counterTradeId = searchParams.counter ? parseInt(searchParams.counter, 10) : null;
+  let opponentId = resolvedParams.propose ? parseInt(resolvedParams.propose, 10) : null;
+  const counterTradeId = resolvedParams.counter ? parseInt(resolvedParams.counter, 10) : null;
 
   let counteredTrade: any = null;
 

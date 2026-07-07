@@ -5,19 +5,21 @@ import { db } from '@/db';
 import { users, draftStates, draftPicks, golfers, trades, tradeItems, transactions, tournaments } from '@/db/schema';
 import { eq, and, desc } from 'drizzle-orm';
 import Link from 'next/link';
+import DraftSelector from './DraftSelector';
 
 export default async function RecapsPage({
   searchParams,
 }: {
-  searchParams: { tab?: string; draft?: string };
+  searchParams: Promise<{ tab?: string; draft?: string }>;
 }) {
   const session = await auth();
   if (!session?.user?.id) {
     redirect('/auth/signin');
   }
 
-  const activeTab = searchParams.tab || 'drafts';
-  const selectedDraftId = searchParams.draft ? parseInt(searchParams.draft, 10) : null;
+  const resolvedParams = await searchParams;
+  const activeTab = resolvedParams.tab || 'drafts';
+  const selectedDraftId = resolvedParams.draft ? parseInt(resolvedParams.draft, 10) : null;
 
   // 1. Fetch all users
   const allUsers = await db
@@ -183,22 +185,10 @@ export default async function RecapsPage({
           <div className="space-y-6">
             {/* Draft Selector */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-800 pb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-neutral-400 text-xs font-bold uppercase">Select Draft:</span>
-                <select
-                  value={activeDraftId || ''}
-                  onChange={(e) => {
-                    window.location.href = `/recaps?tab=drafts&draft=${e.target.value}`;
-                  }}
-                  className="bg-neutral-950 border border-neutral-850 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-emerald-500 font-bold"
-                >
-                  {drafts.map((d) => (
-                    <option key={d.id} value={d.id}>
-                      {d.type === 'long' ? 'Preseason Long Draft' : `${d.tournamentName} (Short)`}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <DraftSelector
+                drafts={drafts.map(d => ({ id: d.id, type: d.type, tournamentName: d.tournamentName }))}
+                activeDraftId={activeDraftId || ''}
+              />
               <span className="text-xs text-neutral-400 font-medium">
                 Showing {draftPicksList.length} selections
               </span>
